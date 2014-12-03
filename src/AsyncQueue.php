@@ -50,7 +50,9 @@ class AsyncQueue extends SyncQueue
     {
         $payload = $this->createPayload($job, $data);
 
-        $id = DB::statement("SELECT laq_async_queue_seq.NEXTVAL FROM DUAL");
+        $row = DB::select(DB::raw("SELECT laq_async_queue_seq.NEXTVAL FROM DUAL"));
+        $id = $row[0]->nextval;
+
         $job = new Job();
         $job->id = $id;
         $job->status = Job::STATUS_OPEN;
