@@ -1,6 +1,6 @@
 {
-    "name": "barryvdh/laravel-async-queue",
-    "description": "Async Queue Driver for Laravel (Push to background)",
+    "name": "studentjason/laravel-async-queue",
+    "description": "Async Queue Driver for Laravel/Oracle (Push to background)",
     "keywords": ["laravel", "queue", "async", "background"],
     "license": "MIT",
     "authors": [
