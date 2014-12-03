@@ -1,6 +1,7 @@
 <?php
 namespace Barryvdh\Queue;
 
+use Illuminate\Support\Facades\DB;
 use Barryvdh\Queue\Models\Job;
 use Illuminate\Queue\SyncQueue;
 
@@ -49,13 +50,15 @@ class AsyncQueue extends SyncQueue
     {
         $payload = $this->createPayload($job, $data);
 
+        $id = DB::statement("SELECT laq_async_queue_seq.NEXTVAL FROM DUAL");
         $job = new Job();
+        $job->id = $id;
         $job->status = Job::STATUS_OPEN;
         $job->delay = $delay;
         $job->payload = $payload;
         $job->save();
 
-        return $job->id;
+        return $id;
     }
 
     /**
