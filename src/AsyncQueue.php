@@ -49,16 +49,28 @@ class AsyncQueue extends SyncQueue
     public function storeJob($job, $data, $delay = 0)
     {
         $payload = $this->createPayload($job, $data);
+        $database = Config::get('database');
+        if ($database['default'] === 'odbc') {
+            $row = DB::select(DB::raw("SELECT laq_async_queue_seq.NEXTVAL FROM DUAL"));
+            $id = $row[0]->nextval;
 
-        $row = DB::select(DB::raw("SELECT laq_async_queue_seq.NEXTVAL FROM DUAL"));
-        $id = $row[0]->nextval;
+            $job = new Job();
+            $job->id = $id;
+            $job->status = Job::STATUS_OPEN;
+            $job->delay = $delay;
+            $job->payload = $payload;
+            $job->save();
 
-        $job = new Job();
-        $job->id = $id;
-        $job->status = Job::STATUS_OPEN;
-        $job->delay = $delay;
-        $job->payload = $payload;
-        $job->save();
+        } else if ($database['default'] === 'mysql') {
+            $payload = $this->createPayload($job, $data);
+            $job = new Job();
+            $job->status = Job::STATUS_OPEN;
+            $job->delay = $delay;
+            $job->payload = $payload;
+            $job->save();
+            $id = $job->id;
+
+        }
 
         return $id;
     }
