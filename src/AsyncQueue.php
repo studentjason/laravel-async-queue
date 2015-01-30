@@ -4,6 +4,7 @@ namespace Barryvdh\Queue;
 use Illuminate\Support\Facades\DB;
 use Barryvdh\Queue\Models\Job;
 use Illuminate\Queue\SyncQueue;
+use Illuminate\Support\Facades\Config;
 
 class AsyncQueue extends SyncQueue
 {
